@@ -874,7 +874,12 @@ async.parallel([
         })
       });
       messageTypes.forEach((messageType) => {
-        const messageSchema = GenerateSchema.json(JSON.parse(sanitizeResponse(messageType.name, messageType.sample)));
+        const sanitizedMessageType = sanitizeResponse(messageType.name, messageType.sample);
+        if (sanitizedMessageType === "") {
+          return;
+        }
+
+        const messageSchema = GenerateSchema.json(JSON.parse(sanitizedMessageType));
         messageSchema.title = messageType.name;
         messageSchema["$schema"] = undefined;
         if (messageType.name === "bot_message") {
